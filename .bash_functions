@@ -1,16 +1,4 @@
-#
-# ~/.bashrc
-#
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
 alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
-
-# added by Anaconda2 installer
-export PATH="/home/blueseb/anaconda2/bin:$PATH"
-
 alias ll='ls -hl'
 alias dus='du -hd1 | sort -hr'
 
