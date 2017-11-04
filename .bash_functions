@@ -33,7 +33,7 @@ function astate() {
 function alogin() {
 	selectedIp=${1:-$instanceIp};
 	echo "$selectedIp"
-	ssh -i ~/.ssh/aws-key-fast-ai.pem ubuntu@$selectedIp;
+	ssh -i ~/.ssh/aws-key-fast-ai.pem ubuntu@"$selectedIp";
 }
 
 function aip() {
