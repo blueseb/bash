@@ -3,7 +3,7 @@ alias ll='ls -hl'
 alias dus='du -hd1 | sort -hr'
 
 export mulettoId=i-0aac6b78303da37c6
-export fastaiId=i-01c7164143bf3d720
+export fastaiId=i-0adbc2c39384784a5
 export defaultId=$fastaiId
 
 function aup() {
