@@ -1,11 +1,3 @@
-alias ls='ls --color=auto'
-alias ll='ls -hl'
-alias dus='du -hd1 | sort -hr'
-
-export mulettoId=i-0aac6b78303da37c6
-export fastaiId=i-0adbc2c39384784a5
-export defaultId=$fastaiId
-
 function aup() {
 	instanceId=${1:-$defaultId};
 	echo "$instanceId";
@@ -27,7 +19,7 @@ function adown() {
 function astate() {
 	instanceId=${1:-$defaultId};
 	echo "$instanceId";
-	aws ec2 describe-instances --instance-ids $instanceId --query "Reservations[0].Instances[0].State.Name";
+	aws ec2 describe-instances --instance-ids $instanceId --query "Reservations[0].Instances[0].[State.Name,InstanceType]";
 }
 
 function alogin() {
@@ -43,4 +35,31 @@ function aip() {
 		--filters "Name=instance-id,Values=$instanceId" \
 		--query "Reservations[0].Instances[0].PublicIpAddress");
 	echo $instanceIp;
+}
+
+function atype() {
+	instanceId=${1:-$defaultId} ;
+	astate $instanceId ;
+	echo
+
+	TYPES=(t2.micro t2.medium t2.xlarge p2.xlarge)
+	echo "Options:"
+	for ((i=1; i <= ${#TYPES[@]}; i++)); do
+			echo "[$i] ${TYPES[i-1]}"
+	done
+	echo "[q] quit"
+	echo
+
+	while [[ 1 ]]
+	do
+	    read -p "Please make a selection: " choice
+	    case $choice in
+				[1-3] )
+					aws ec2 modify-instance-attribute --instance-id $instanceId --instance-type ${TYPES[$choice-1]} ;
+					astate $instanceId ;
+					break ;;
+				q|Q ) break ;;
+	      * ) echo "Invalid choice" ;;
+	    esac
+	done
 }
