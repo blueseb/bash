@@ -19,7 +19,7 @@ function adown() {
 function astate() {
 	instanceId=${1:-$defaultId};
 	echo "$instanceId";
-	aws ec2 describe-instances --instance-ids $instanceId --query "Reservations[0].Instances[0].[State.Name,InstanceType]";
+	aws ec2 describe-instances --instance-ids $instanceId --query "Reservations[0].Instances[0].[State.Name, PublicIpAddress, InstanceType]";
 }
 
 function alogin() {
@@ -62,4 +62,8 @@ function atype() {
 	      * ) echo "Invalid choice" ;;
 	    esac
 	done
+}
+
+function acopy() {
+	scp -i .ssh/$pem ubuntu@$instanceIp:$1 .
 }
