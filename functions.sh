@@ -19,7 +19,9 @@ function adown() {
 function astate() {
 	instanceId=${1:-$defaultId};
 	echo "$instanceId";
-	aws ec2 describe-instances --instance-ids $instanceId --query "Reservations[0].Instances[0].[State.Name, PublicIpAddress, InstanceType]";
+	aws ec2 describe-instances \
+		--instance-ids $instanceId \
+		--query "Reservations[0].Instances[0].[State.Name, PublicIpAddress, InstanceType]";
 }
 
 function alogin() {
@@ -54,8 +56,10 @@ function atype() {
 	do
 	    read -p "Please make a selection: " choice
 	    case $choice in
-				[1-3] )
-					aws ec2 modify-instance-attribute --instance-id $instanceId --instance-type ${TYPES[$choice-1]} ;
+				[1-${#TYPES[@]}] )
+					aws ec2 modify-instance-attribute \
+						--instance-id $instanceId \
+						--instance-type ${TYPES[$choice-1]} ;
 					astate $instanceId ;
 					break ;;
 				q|Q ) break ;;
