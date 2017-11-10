@@ -6,8 +6,8 @@ function aup() {
 	instanceIp=$(aws ec2 describe-instances \
 		--filters "Name=instance-id,Values=$instanceId" \
 		--query "Reservations[0].Instances[0].PublicIpAddress");
-	echo $instanceIp;
-	xdg-open http://$instanceIp:8888 2>&1 &
+	echo $instanceIp:8888;
+	# xdg-open http://$instanceIp:8888 2>&1 &
 }
 
 function adown() {
