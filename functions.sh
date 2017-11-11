@@ -6,8 +6,13 @@ function aup() {
 	instanceIp=$(aws ec2 describe-instances \
 		--filters "Name=instance-id,Values=$instanceId" \
 		--query "Reservations[0].Instances[0].PublicIpAddress");
-	echo $instanceIp;
-	xdg-open http://$instanceIp:8888 2>&1 &
+	url="$instanceIp:8888";
+	if [[ -n $(uname -r | fgrep -i microsoft) ]]; then
+		echo $url | clip.exe;
+		echo "$url copied to clipboard";
+	else
+		xdg-open http://$instanceIp:8888 2>&1 &
+	fi
 }
 
 function adown() {
