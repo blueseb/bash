@@ -37,3 +37,8 @@ echo list elements from CREATED_CS to CREATED_BRANCH
 for ((i=$CREATED_CS; i <= $CREATED_BRANCH; i++)); do
     echo ${STATES[$i]}
 done
+
+
+
+
+for file in $(ls train/dogs/ | sort -R | head -n32) ; do ln -s $file sample/train/dogs/ ; done

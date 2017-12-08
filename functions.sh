@@ -1,3 +1,30 @@
+
+function ainstance() {
+	local IFS=$'\n'
+	instances=($(aws ec2 describe-instances \
+		--query "Reservations[*].Instances[*].[InstanceId,InstanceType,InstanceLifecycle,State.Name]"))
+	echo "Select instance:"
+	for ((i=1; i <= ${#instances[@]}; i++)); do
+			echo "[$i] ${instances[i-1]}"
+	done
+	echo "[q] quit"
+	echo
+
+	local IFS=$'\t'
+	while [[ 1 ]]
+	do
+	    read -p "Please make a selection: " choice
+	    case $choice in
+				[1-${#instances[@]}] )
+					description=(${instances[$choice-1]})
+					export defaultId=${description[0]}
+					break ;;
+				q|Q ) break ;;
+	      * ) echo "Invalid choice" ;;
+	    esac
+	done
+}
+
 function aup() {
 	instanceId=${1:-$defaultId};
 	echo "$instanceId";
@@ -74,5 +101,12 @@ function atype() {
 }
 
 function acopy() {
-	scp -i .ssh/$pem ubuntu@$instanceIp:$1 .
+	scp -i ~/.ssh/$pem ubuntu@$instanceIp:$1 .
+}
+
+function ln_random() {
+	for file in $(ls $1 | sort -R | head -n$2)
+	do
+		ln -s $1$file
+	done
 }
