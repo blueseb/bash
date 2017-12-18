@@ -2,7 +2,7 @@
 function ainstance() {
 	local IFS=$'\n'
 	instances=($(aws ec2 describe-instances \
-		--query "Reservations[*].Instances[*].[InstanceId,InstanceType,InstanceLifecycle,State.Name]"))
+		--query "Reservations[*].Instances[*].[InstanceId,InstanceType,AvailabilityZone,InstanceLifecycle,State.Name]"))
 	echo "Select instance:"
 	for ((i=1; i <= ${#instances[@]}; i++)); do
 			echo "[$i] ${instances[i-1]}"
@@ -23,6 +23,13 @@ function ainstance() {
 	      * ) echo "Invalid choice" ;;
 	    esac
 	done
+	aip
+}
+
+function aattach(){
+	selectedId=${1:-$defaultId};
+	aws ec2 attach-volume --volume-id vol-0644b68ff463cc625 --instance-id $selectedId --device /dev/sdf
+	alogin
 }
 
 function aup() {
@@ -59,7 +66,7 @@ function astate() {
 function alogin() {
 	selectedIp=${1:-$instanceIp};
 	echo "$selectedIp - $pem"
-	ssh -i ~/.ssh/"$pem" ubuntu@"$selectedIp";
+	ssh -q -i ~/.ssh/"$pem" ubuntu@"$selectedIp";
 }
 
 function aip() {
